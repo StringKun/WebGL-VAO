@@ -1,0 +1,19 @@
+    uniform mat4 uMVPMatrix; 				//总变换矩阵
+	uniform mat4 uMMatrix; 					//变换矩阵
+	uniform mat4 uMProjCameraMatrix; 		//投影、摄像机组合矩阵
+	uniform vec3 uLightLocation;				//光源位置
+	uniform vec3 uCamera;					//摄像机位置
+	attribute vec3 aPosition;  						//顶点位置
+	void main(){
+	      vec3 A=vec3(0.0,0.1,0.0);			//绘制阴影平面上任意一点的坐标
+	      vec3 n=vec3(0.0,1.0,0.0);			//绘制阴影平面的法向量
+	      vec3 S=uLightLocation; 				//光源位置
+	      vec3 V=(uMMatrix*vec4(aPosition,1)).xyz;  		//经过平移和旋转变换后的点的坐标
+	      vec3 VL=S+(V-S)*(dot(n,(A-S))/dot(n,(V-S)));//顶点沿光线投影到需要绘制阴影的平面上点的坐标
+	      gl_Position = uMProjCameraMatrix*vec4(VL,1); 	//根据组合矩阵计算此次绘制此顶点位置
+	}
+<#BREAK_BN#>
+	precision mediump float;				//给出默认的浮点精度
+	void main(){
+		gl_FragColor = vec4(0.2,0.2,0.2,1.0);			//片元最终颜色为阴影的颜色
+	}
